@@ -15,6 +15,7 @@ code {
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
+  height: 100vh;
 }
 
 ol, ul {
@@ -59,6 +60,6 @@ ol, ul {
   flex-direction: row;
 }
 
-.game-info {
-  margin-left: 20px;
-}
+/*.game-info {*/
+/*  margin-left: 20px;*/
+/*}*/

@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Switch from '@bit/mui-org.material-ui.switch';
-import FormControlLabel from '@bit/mui-org.material-ui.form-control-label';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button} from "react-bootstrap";
-
+import {Button, Col, Image, Row} from "react-bootstrap";
+// import BootstrapSwitchButton from 'bootstrap-switch-button-react'
+// import { Button } from '@material-ui/core';
+import * as Icon from 'react-bootstrap-icons';
+import logo from './fase.png'
 
 function Square(props) {
     const chess = props.value === 1 ? '●': (props.value === 2 ? '○' : '');
@@ -469,7 +470,7 @@ class Game extends React.Component {
 
         return (
             <div className="game">
-                <div className="game-board">
+                <div className="game-board" style={{width: "50vw", display: "flex", justifyContent: "center", alignItems: "right"}}>
                     <Board
                         squares={this.state.latest_squares}
                         onClick={(i) => this.handleClick(i)}
@@ -478,8 +479,13 @@ class Game extends React.Component {
                         is_x_next = {this.state.is_x_next}
                     />
                 </div>
-                <div className="game-info">
-                    <h5>Choose your opponent</h5>
+                <div className="game-info" style={{width: "50vw"}}>
+                    <h4>Match Status</h4>
+                    <div style={{marginTop: '20px',}}>{side_info}</div>
+                    <div>{status}</div>
+                    <div style={{color: 'red',}}>{this.state.msg}</div>
+
+                    <h5 style={{marginTop: "50px"}}>Choose your opponent</h5>
 
                     <Dropdown>
                         <DropdownButton id="dropdown-item-button" title={opponent} onSelect={(e) => this.changeOpponent(e)}>
@@ -489,22 +495,30 @@ class Game extends React.Component {
                         </DropdownButton>
                     </Dropdown>
 
-                    <div style={{marginTop: '20px',}}>{side_info}</div>
+
                     <div>
-                        <Button style={{marginTop: '10px',}} variant="outline-primary" size="sm" onClick={(e) => this.changeSide()}>Switch Side</Button>
+                        <Button style={{marginTop: '10px',}} variant="outline-primary" size="sm" onClick={(e) => this.changeSide()}>
+                            <Icon.ArrowLeftRight />Switch Side
+                        </Button>
+                        <Button style={{marginLeft: '10px',marginTop: '10px',}} variant="outline-primary" size="sm" onClick={(e) => this.changeSide()}>
+                            <Icon.ArrowCounterclockwise />Restart
+                        </Button>
                     </div>
 
-                    <FormControlLabel style={{marginTop: '10px',}}
-                        control={
-                            <Switch checked={this.state.checkedHint}
-                                    onChange={(e) => {this.handleButton('checkedHint', e)}}
-                                    value="Show Next Step Hint"
-                                    color="primary" />
-                        }
-                        label="Show Next Step Hint"
-                    />
-                    <div>{status}</div>
-                    <div style={{color: 'red',}}>{this.state.msg}</div>
+                    <div className='custom-control custom-switch' style={{marginTop: '10px'}}>
+                        <input
+                            type='checkbox'
+                            className='custom-control-input'
+                            id='customSwitches'
+                            checked={this.state.checkedHint}
+                            onChange={(e) => {this.handleButton('checkedHint', e)}}
+                            readOnly
+                        />
+                        <label className='custom-control-label' htmlFor='customSwitches'>
+                            Show Next Step Hint
+                        </label>
+                    </div>
+
 
                     {/*<ol>{moves}</ol>*/}
                 </div>
@@ -517,13 +531,30 @@ class Index extends React.Component {
 
     render() {
         return (
-        <div className="Index">
-            <div className="Title" style={{height:"150px", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "48px"}}>
-                APS105 Reversi Interactive Platform
+        <div className="Index" style={{height: "100%"}}>
+            <div className="Title" style={{height:"150px", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "38px"}}>
+                <Row style={{width: "100%"}}>
+                    <Col md={3} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <Image style={{height: "60px"}} src={logo} fluid/>
+                    </Col>
+                    <Col md={9} style={{paddingLeft: "10%"}}>
+                        APS105 Reversi Interactive Platform
+                    </Col>
+                </Row>
+
             </div>
-            <div className="Gameboard" style={{margin: "20px"}}>
+            <div className="Gameboard" style={{margin: "50px", display: "flex", justifyContent: "center", alignItems: "center"}}>
                 <Game />
             </div>
+
+            <footer style={{bottom:"10px", width: "100%", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "20px", position: "absolute"}}>
+                <div style={{borderTopStyle: "solid", borderWidth: "2px", width: "100%", borderColor: "#CCCCCC"}}>
+                    <div style={{display: "flex", justifyContent: "center", alignItems: "center", padding: "20px"}}>
+                        &copy; 2021 copyright APS105 Teaching Team, University of Toronto
+                    </div>
+                </div>
+
+            </footer>
         </div>
     )}
 
