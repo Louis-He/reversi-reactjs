@@ -2,7 +2,7 @@
   "name": "test",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://Louis-He.github.io/reversi-reactjs",
+  "homepage": ".",
   "dependencies": {
     "@bit/mui-org.material-ui.form-control-label": "^4.9.10",
     "@bit/mui-org.material-ui.grid": "^4.9.10",

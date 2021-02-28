@@ -4,11 +4,14 @@ import './index.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button, Col, Image, Row} from "react-bootstrap";
+import {Modal, Button, Col, Image, Row} from "react-bootstrap";
+import MyNavbar from "./components/navBar.js"
 // import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 // import { Button } from '@material-ui/core';
 import * as Icon from 'react-bootstrap-icons';
 import logo from './fase.png'
+
+const indexUrl = "http://161.35.225.127:8090"
 
 function Square(props) {
     const chess = props.value === 1 ? '●': (props.value === 2 ? '○' : '');
@@ -33,6 +36,7 @@ class Board extends React.Component {
         return (
             <Square
                 value={this.props.squares[i]}
+                key={i}
                 onClick={() => this.props.onClick(i)}
                 checkedHint = {this.props.checkedHint}
                 is_x_next = {this.props.is_x_next}
@@ -47,7 +51,7 @@ class Board extends React.Component {
             for(let j = 0; j < this.props.dimension; j++){
                 row.push(this.renderSquare(i * this.props.dimension + j));
             }
-            board.push(<div className='board-row'>{row}</div>);
+            board.push(<div className='board-row' key={i}>{row}</div>);
         }
 
         return (
@@ -59,6 +63,26 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
+    componentDidMount() {
+        fetch(indexUrl + "/api/getOpponentList", {
+            "method": "GET",
+            "headers": {
+                "accept": "application/json"
+            },
+        })
+        .then(response => response.json())
+        .then(response => {
+            console.log("S")
+            this.setState({
+                dropdown_arr: response.data,
+                solutionDivider: response.sol_divider
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        });
+    }
+
     constructor(props) {
         super(props);
         let original_board = Array(64).fill(0);
@@ -71,6 +95,7 @@ class Game extends React.Component {
         let hint_board = original_board.slice();
 
         this.hintMove(hint_board, true);
+        this.modalClose = this.modalClose.bind(this);
 
         this.state = {
             history: [{
@@ -83,11 +108,15 @@ class Game extends React.Component {
             is_player_vs_computer: true,
 
             // dropdown menu
-            dropdown_arr: ["APS105-smarter", "APS105-smartest", "sandbox"],
+            dropdown_arr: ["sandbox"],
             selector: 0,
 
             // switch side button
             player: true, // true: black, false: white
+
+            showModal: false,
+            error: false,
+            errorSilenced: false,
         };
     }
 
@@ -146,7 +175,7 @@ class Game extends React.Component {
     // Note: board will be changed in-place
     hintMove(board, is_x_next) {
         console.log('hint')
-        console.log(board)
+        // console.log(board)
         let any_valid = false;
         for(let i = 0; i < 64; i++){
             const validation_check = this.checkMove(board, i, is_x_next);
@@ -174,14 +203,14 @@ class Game extends React.Component {
         let validation_check = []; // indicates whether the move is valid regards 9 different directions. (middle one is meaningless)
         let overall_check = false; // indicates whether the move is valid or not
 
-        for(let look_down = -1; look_down <= 1; look_down++){
-            if(is_legal) { break; }
+        for (let look_down = -1; look_down <= 1; look_down++) {
+            if (is_legal) { break; }
             let validation_row = []
             for(let look_right = -1; look_right <= 1; look_right++) {
                 if(look_down === 0 && look_right === 0) { validation_row.push(false);continue; }
                 if(is_legal) { break; }
                 let current_xy = JSON.parse(JSON.stringify(target_xy));
-                while(true){
+                while (true) {
                     current_xy.y += look_down;
                     current_xy.x += look_right;
                     if(this.is_xy_out_of_bound(8, current_xy.x, current_xy.y)){
@@ -190,11 +219,11 @@ class Game extends React.Component {
                     }
 
                     let current_i = this.map_xy_to_arr(8, current_xy);
-                    if(board[current_i] === opponent){
+                    if (board[current_i] === opponent) {
                         is_legal = true;
-                    }else if(board[current_i] === player){
+                    } else if(board[current_i] === player) {
                         break;
-                    }else if(board[current_i] === 0 || board[current_i] === 3){
+                    } else if(board[current_i] === 0 || board[current_i] === 3) {
                         is_legal = false;
                         break;
                     }
@@ -244,16 +273,12 @@ class Game extends React.Component {
         console.log(board)
 
         this.endMove(board, is_x_next);
-        // console.log(next_is_x)
-
-        // if (!(next_is_x === this.state.player)) {
-        //     if (this.state.dropdown_arr[this.state.selector] !== "sandbox"){
-        //         this.opponentMoveWrapper(board);
-        //     }
-        // }
     }
 
     endMove(board, is_x_next) {
+        if (this.setState.error) {
+            return
+        }
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         let is_end = this.calculateScore(board).end;
         console.log("is_end: " + is_end)
@@ -261,11 +286,13 @@ class Game extends React.Component {
         let hint_board = board.slice();
 
         this.hintMove(hint_board, !is_x_next);
+        console.log("!")
+        console.log(hint_board)
 
         let next_player = is_x_next;
         if (!is_end) {
-            next_player = !is_x_next;
-            if (this.anyMove(board, next_player)) {
+            if (this.anyMove(board, !next_player)) {
+                next_player = !is_x_next;
                 this.setState({
                     is_x_next: next_player,
                 })
@@ -286,8 +313,9 @@ class Game extends React.Component {
 
             if (!(next_player === this.state.player)) {
                 if (this.state.dropdown_arr[this.state.selector] !== "sandbox"){
+                    console.log("endMove-opponentMove");
                     this.opponentMove(board);
-                    // console.log(board);
+                    // 
                 }
             }
         })
@@ -296,6 +324,7 @@ class Game extends React.Component {
     }
 
     initGame(player_color) {
+        console.log("initGame")
         var that = this;
         let original_board = Array(64).fill(0);
         // initialize the board
@@ -306,12 +335,18 @@ class Game extends React.Component {
 
         this.setState ({
             is_player_vs_computer: true,
+            error: false,
+            errorSilenced: false,
+            msg: ""
         });
 
         if (!player_color && this.state.dropdown_arr[this.state.selector] !== "sandbox") {
             // request opponent to make a move first
             this.opponentMove(original_board).then(function(res) {
+                console.log('opponentMove - BAck')
+                console.log(res);
                 let hint_board = res.slice();
+                that.hintMove(hint_board, false);
 
                 that.setState({
                     history: [{
@@ -322,10 +357,12 @@ class Game extends React.Component {
                     stepNumber: 1,
                 })
 
-                that.hintMove(hint_board, false);
+                
             })
         } else {
             let hint_board = original_board.slice();
+            this.hintMove(hint_board, true)
+
 
             this.setState ({
                 history: [{
@@ -336,7 +373,6 @@ class Game extends React.Component {
                 latest_squares: hint_board,
             });
 
-            this.hintMove(hint_board, true)
         }
     }
 
@@ -350,33 +386,48 @@ class Game extends React.Component {
             boardStr += squares[i];
         }
 
-        formData.append('board', boardStr);
-        formData.append('color', !this.state.player);
-        formData.append('AI_player', this.state.dropdown_arr[this.state.selector]);
-
-        return fetch('http://localhost:8000/api/get_next', {
-            method: 'POST',
-            body: formData,
+        return fetch(indexUrl + '/api/getNextAIMove?AIid=' + this.state.dropdown_arr[this.state.selector]
+                                            + '&nextMove=' + ((!this.state.player) ? 'B' : 'W')
+                                         + '&boardConfig=' + boardStr, {
+            method: 'GET',
         }).then((response) => response.json()).then((responseData) => {
-            let board_str = responseData.updated_board
-            let board = Array(64).fill(0);
-            for(let i = 0; i < board_str.length; i++){
-                board[i] = parseInt(board_str[i]);
+            let newBoardStr = responseData.newBoard
+            console.log(newBoardStr.length)
+
+            if (newBoardStr.length !== 64) {
+                alert("NOT valid output")
+                this.setState({
+                    error: true,
+                },() => {
+                    this.endMoveWrapper(squares, !this.state.player);
+                })
+                return squares;
+            } else {
+                let board = Array(64).fill(0);
+                for(let i = 0; i < newBoardStr.length; i++){
+                    board[i] = parseInt(newBoardStr[i]);
+                }
+                this.endMoveWrapper(board, !this.state.player);
+                return board;
             }
-
-            this.endMoveWrapper(board, !this.state.player);
-
-            return board;
         })
     }
 
     //############ Main click handling Functions #############//
     changeOpponent(e) {
         this.setState({
-            selector: e
+            selector: e,
+            error: false,
+            errorSilenced: false,
+            msg: ""
         },() => {
-            this.initGame();
+            this.initGame(this.state.player);
         })
+    }
+
+    resetGame() {
+        var that = this;
+        that.initGame(this.state.player);
     }
 
     changeSide() {
@@ -390,6 +441,10 @@ class Game extends React.Component {
     }
 
     handleClick(i) {
+        if (this.state.error) {
+            return
+        }
+
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const squares = history[history.length - 1].squares.slice();
         console.log(history);
@@ -435,27 +490,49 @@ class Game extends React.Component {
         this.setState({[name]: event.target.checked});
     }
 
-    render() {
-        const history = this.state.history;
-        const score = this.calculateScore(this.state.latest_squares);
-
-        const moves = history.map((step, move) => {
-            const desc = move ?
-                'Go to move #' + move :
-                'Go to game start';
-            return (
-                <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
-                </li>
-            );
+    modalClose() {
+        this.setState({
+            showModal: false,
+            errorSilenced: true,
         });
+    }
+
+    render() {
+        var score = {}
+        // const history = this.state.history;
+        if (this.state.error) {
+            score = this.calculateScore(this.state.latest_squares);
+            score.end = true
+        } else {
+            score = this.calculateScore(this.state.latest_squares);
+        }
+
+        // const moves = history.map((step, move) => {
+        //     const desc = move ?
+        //         'Go to move #' + move :
+        //         'Go to game start';
+        //     return (
+        //         <li key={move}>
+        //             <button onClick={() => this.jumpTo(move)}>{desc}</button>
+        //         </li>
+        //     );
+        // });
 
 
         let status;
         let err_msg = this.state.msg;
         if (score.end) {
-            status = 'Winner: ' + (score.win === 1 ? '⚫' : '⚪');
-            err_msg = "Game already over"
+            if (!this.state.error) {
+                status = '👑 Winner: ' + (score.win === 1 ? '⚫' : '⚪');
+                err_msg = "Game already over"
+            } else {
+                err_msg = "Invalid move by computer, please switch side or restart."
+                if (!this.state.showModal && !this.state.errorSilenced) {
+                    this.setState({
+                        showModal: true,
+                    })
+                }
+            }
         } else {
             status = 'Next player: ' + (this.state.is_x_next ? '⚫' : '⚪');
         }
@@ -466,6 +543,14 @@ class Game extends React.Component {
             side_info = "⚫ Player(" + score.black + ") VS. " + opponent + "(" + score.white + ") ⚪";
         } else {
             side_info = "⚫ " + opponent + "(" + score.black + ") VS. Player(" + score.white + ") ⚪";
+        }
+
+        var dropdownList = [];
+        for (var i = 0; i < this.state.dropdown_arr.length; i++) {
+            if ( i === this.state.solutionDivider ) {
+                dropdownList.push(<Dropdown.Divider />);
+            }
+            dropdownList.push(<Dropdown.Item as="button" key={i} eventKey={i}>{this.state.dropdown_arr[i]}</Dropdown.Item>);
         }
 
         return (
@@ -483,15 +568,13 @@ class Game extends React.Component {
                     <h4>Match Status</h4>
                     <div style={{marginTop: '20px',}}>{side_info}</div>
                     <div>{status}</div>
-                    <div style={{color: 'red',}}>{this.state.msg}</div>
+                    <div style={{color: 'red',}}>{err_msg}</div>
 
                     <h5 style={{marginTop: "50px"}}>Choose your opponent</h5>
 
                     <Dropdown>
                         <DropdownButton id="dropdown-item-button" title={opponent} onSelect={(e) => this.changeOpponent(e)}>
-                            <Dropdown.Item as="button" eventKey='0'>APS105-smarter</Dropdown.Item>
-                            <Dropdown.Item as="button" eventKey='1'>APS105-smartest</Dropdown.Item>
-                            <Dropdown.Item as="button" eventKey='2'>sandbox</Dropdown.Item>
+                            {dropdownList}
                         </DropdownButton>
                     </Dropdown>
 
@@ -500,10 +583,22 @@ class Game extends React.Component {
                         <Button style={{marginTop: '10px',}} variant="outline-primary" size="sm" onClick={(e) => this.changeSide()}>
                             <Icon.ArrowLeftRight />Switch Side
                         </Button>
-                        <Button style={{marginLeft: '10px',marginTop: '10px',}} variant="outline-primary" size="sm" onClick={(e) => this.changeSide()}>
+                        <Button style={{marginLeft: '10px',marginTop: '10px',}} variant="outline-primary" size="sm" onClick={(e) => this.resetGame()}>
                             <Icon.ArrowCounterclockwise />Restart
                         </Button>
                     </div>
+
+                    <Modal show={this.state.showModal} onHide={(e) => this.modalClose()}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Match Over</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>Game Ends! You can switch side, restart or select a new player.</Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={(e) => this.modalClose()}>
+                                Close
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
 
                     <div className='custom-control custom-switch' style={{marginTop: '10px'}}>
                         <input
@@ -532,17 +627,7 @@ class Index extends React.Component {
     render() {
         return (
         <div className="Index" style={{height: "100%"}}>
-            <div className="Title" style={{height:"150px", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "38px"}}>
-                <Row style={{width: "100%"}}>
-                    <Col md={3} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                        <Image style={{height: "60px"}} src={logo} fluid/>
-                    </Col>
-                    <Col md={9} style={{paddingLeft: "10%"}}>
-                        APS105 Reversi Interactive Platform
-                    </Col>
-                </Row>
-
-            </div>
+            <MyNavbar />
             <div className="Gameboard" style={{margin: "50px", display: "flex", justifyContent: "center", alignItems: "center"}}>
                 <Game />
             </div>
