@@ -1,7 +1,7 @@
 # Project Introduction
 
-This project is used for course APS105H1S(year 2021). Due to the COVID-19 pandemic, the teaching team wants to build an interactive form to 
-give student a funnier way to complete the biggest project in this course. The production page of this project is currently on: 
+This project is used for course APS105H1S(year 2021). Due to the COVID-19 pandemic, the teaching team wants to build an interactive platform to 
+give student a more interesting way to complete the biggest project in this course. The production page of this project is currently on: 
 [Production Page](http://161.35.225.127:8090/)
 
 # Open Source
