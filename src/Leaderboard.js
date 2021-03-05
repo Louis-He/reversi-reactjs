@@ -1,6 +1,8 @@
 import React from 'react';
 import './index.css';
-import {Modal, Button, Col, Row, InputGroup, FormControl} from "react-bootstrap";
+import {ProgressBar, Button, Col, Row, InputGroup, FormControl} from "react-bootstrap";
+import * as Icon from 'react-bootstrap-icons';
+
 import MyNavbar from "./components/navBar.js"
 import MyFooter from "./components/footer.js"
 
@@ -29,6 +31,17 @@ class Leadertable extends React.Component {
           <Col xs={2}>Score</Col>
           <Col xs={4}>Indicator</Col>
           <Col xs={2}>Status</Col>
+        </Row>
+        <Row>
+          <Col xs={1}>1<span style={{color:"orange"}}><Icon.AwardFill /></span></Col>
+          <Col xs={3}>SiweiHe</Col>
+          <Col xs={2}>∞</Col>
+          <Col xs={4} style={{margin: "auto"}}><ProgressBar now={100} label={"∞ %"}/></Col>
+          <Col xs={2}><span className="badge badge-success">PASS</span></Col>
+        </Row>
+        
+        <Row style={{textAlign: "center"}}>
+          <Col style={{marginTop: "20px", marginBottom: "20px", color: "orange"}}>Competition Not Yet Started.</Col>
         </Row>
       </div>
     )
