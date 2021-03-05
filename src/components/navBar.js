@@ -6,7 +6,7 @@ import {Github} from 'react-bootstrap-icons';
 export default class MyNavbar extends React.Component {
   render(){
     return (
-      <Navbar bg="light" expand="lg" style={{marginBottom: "100px"}}>
+      <Navbar bg="light" expand="lg">
         <Navbar.Brand href=".">
           <img
             src="../fase.png"
@@ -20,7 +20,7 @@ export default class MyNavbar extends React.Component {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link href=".">Home</Nav.Link>
-            <Nav.Link href="#link">LeaderBoard</Nav.Link>
+            <Nav.Link href="./leaderboard">LeaderBoard</Nav.Link>
             <Nav.Link href="https://github.com/Louis-He/reversi-reactjs"><Github />Source Code</Nav.Link>
           </Nav>
         </Navbar.Collapse>
