@@ -8,7 +8,8 @@ import {
     Switch,
     Route,
     Link,
-    useParams
+    useParams,
+    useRouteMatch
 } from "react-router-dom";
 
 import Home from "./Home";
@@ -40,16 +41,41 @@ function Homepage() {
     return <Home />;
 }
 
+
 function PersonalPage() {
   // We can use the `useParams` hook here to access
   // the dynamic pieces of the URL.
-  // let { studentID, studentPIN } = useParams();
+  let { studentID, studentPIN } = useParams();
 
   return (
-    // <PersonalInfo studentID={studentID} studentPIN={studentPIN} />
-    <PersonalInfo />
+    <PersonalInfo studentID={studentID} studentPIN={studentPIN} />
+    // <PersonalInfo />
   );
 }
+
+function ThirdLevel() {
+  let { path, url } = useRouteMatch();
+  return (
+    <Switch>
+      <Route path={`${path}/:studentPIN`}>
+        <PersonalPage />
+      </Route>
+    </Switch>
+  )
+}
+
+
+function SecondLevel() {
+  let { path, url } = useRouteMatch();
+  return (
+    <Switch>
+      <Route path={`${path}/:studentID`}>
+        <ThirdLevel />
+      </Route>
+    </Switch>
+  )
+}
+
 // ReactDOM.render(
 //     <Home />,
 //     document.getElementById('root')
@@ -63,7 +89,9 @@ ReactDOM.render(<Router>
         <Leaderboard />
       </Route>
       <Switch>
-        <Route path="/result/:studentID/:studentPIN" children={<PersonalPage />} />
+        <Route path="/result">
+          <SecondLevel />
+        </Route>
       </Switch>
     </div>
   </Router>, document.getElementById("root"));
