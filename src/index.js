@@ -7,11 +7,13 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    useParams
 } from "react-router-dom";
 
 import Home from "./Home";
 import Leaderboard from "./Leaderboard";
+import PersonalInfo from "./personalInfo";
 
 function App() {
     return (
@@ -37,6 +39,17 @@ function App() {
 function Homepage() {
     return <Home />;
 }
+
+function PersonalPage() {
+  // We can use the `useParams` hook here to access
+  // the dynamic pieces of the URL.
+  // let { studentID, studentPIN } = useParams();
+
+  return (
+    // <PersonalInfo studentID={studentID} studentPIN={studentPIN} />
+    <PersonalInfo />
+  );
+}
 // ReactDOM.render(
 //     <Home />,
 //     document.getElementById('root')
@@ -49,5 +62,8 @@ ReactDOM.render(<Router>
       <Route path="/leaderboard">
         <Leaderboard />
       </Route>
+      <Switch>
+        <Route path="/result/:studentID/:studentPIN" children={<PersonalPage />} />
+      </Switch>
     </div>
   </Router>, document.getElementById("root"));

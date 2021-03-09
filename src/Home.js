@@ -3,7 +3,7 @@ import './index.css';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Modal, Button, Col, Image, Row} from "react-bootstrap";
+import {Modal, Button, Alert, Col, Image, Row} from "react-bootstrap";
 import MyNavbar from "./components/navBar.js"
 import MyFooter from "./components/footer.js"
 
@@ -632,6 +632,7 @@ class Home extends React.Component {
       return (
       <div style={{height: "100%"}}>
           <MyNavbar style={{marginBottom: "100px"}} />
+          
           <div className="Gameboard" style={{margin: "50px", marginBottom: "300px", display: "flex", justifyContent: "center", alignItems: "center"}}>
               <Game />
           </div>

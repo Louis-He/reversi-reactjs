@@ -50,6 +50,21 @@ class Leadertable extends React.Component {
 
 
 class Linktoindividual extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      studentID:     '',
+      studentPIN:    '',
+
+      is_check_disabled: true,
+    }
+  }
+
+  rankCheck() {
+    window.location.href='/result/' + this.state.studentID + '/' + this.state.studentPIN
+  }
+
+
   render() {
     return (
       <div className="container">
@@ -66,6 +81,7 @@ class Linktoindividual extends React.Component {
                 placeholder="Your Utorid"
                 aria-label="Username"
                 aria-describedby="basic-addon1"
+                onChange={e => this.setState({ studentID: e.target.value })}
               />
             </InputGroup>
           </Col>
@@ -78,9 +94,17 @@ class Linktoindividual extends React.Component {
                 placeholder="PIN on Quercus"
                 aria-label="PIN"
                 aria-describedby="basic-addon2"
+                onChange={e => this.setState({ studentPIN: e.target.value })}
               />
             </InputGroup>
           </Col>
+        </Row>
+        <Row>
+          <Button 
+            variant="primary"
+            disabled={this.state.is_check_disabled}
+            onClick={e => this.rankCheck()}
+          >Check My Rank =)</Button>
         </Row>
       </div>
     )
