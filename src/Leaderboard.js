@@ -94,7 +94,7 @@ class Linktoindividual extends React.Component {
                 placeholder="PIN on Quercus"
                 aria-label="PIN"
                 aria-describedby="basic-addon2"
-                onChange={e => this.setState({ studentPIN: e.target.value })}
+                onChange={e => this.setState({ studentPIN: e.target.value.replace(/\D/g, '') })}
               />
             </InputGroup>
           </Col>
