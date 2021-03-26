@@ -55,12 +55,24 @@ class Linktoindividual extends React.Component {
     this.state = {
       studentID:     '',
       studentPIN:    '',
+      alert: '',
 
-      is_check_disabled: true,
+      is_check_disabled: false,
     }
   }
 
   rankCheck() {
+    if(this.state.studentID == '' || this.state.studentPIN == '')
+    {
+      this.setState({
+        alert: 'Invalid Input',
+      })
+      return false;
+    }else{
+      this.setState({
+        alert: '',
+      })
+    }
     window.location.href='/result/' + this.state.studentID + '/' + this.state.studentPIN
   }
 
@@ -105,7 +117,9 @@ class Linktoindividual extends React.Component {
             disabled={this.state.is_check_disabled}
             onClick={e => this.rankCheck()}
           >Check My Rank =)</Button>
+          
         </Row>
+        <h4 style={{marginBottom: "20px",color:"orange"}}>{this.state.alert}</h4>
       </div>
     )
   }
