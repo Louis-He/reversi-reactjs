@@ -92,3 +92,41 @@ ul {
   -ms-filter: blur(8px);
   transform: scale(1.1);
 }
+
+
+.res-circle {
+  /* (A) PERCENTAGE WIDTH & BORDER RADIUS */
+  width: 200px;
+  border-radius: 50%;
+
+  /* (B) BACKGROUND COLOR */ 
+  /* background: #ffd900; */
+  border-color: #BBB;
+  border-style: solid;
+  color: #ffd900;
+
+  /* (C) NECESSARY TO POSITION TEXT BLOCK */
+  line-height: 0;
+  position: relative;
+}
+ 
+/* (D) MATCH HEIGHT */
+.res-circle::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+ 
+/* (E) TEXT BLOCK */
+.circle-txt {
+  /* (E1) CENTER TEXT IN CIRCLE */
+  position: absolute;
+  bottom: 50%;
+  width: 100%;
+  text-align: center;
+ 
+  /* (E2) THE FONT - NOT REALLY IMPORTANT */
+  font-family: arial, sans-serif;
+  font-weight: bold;
+  font-size: 100px;
+}

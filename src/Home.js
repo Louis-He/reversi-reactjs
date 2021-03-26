@@ -12,7 +12,7 @@ import MyFooter from "./components/footer.js"
 import * as Icon from 'react-bootstrap-icons';
 import logo from './fase.png'
 
-const indexUrl = "http://161.35.225.127:8090"
+const indexUrl = "http://142.150.239.187:8090"
 
 function Square(props) {
     const chess = props.value === 1 ? '●': (props.value === 2 ? '○' : '');

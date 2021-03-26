@@ -56,7 +56,7 @@ class Linktoindividual extends React.Component {
       studentID:     '',
       studentPIN:    '',
 
-      is_check_disabled: true,
+      is_check_disabled: false,
     }
   }
 
