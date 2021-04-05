@@ -6,6 +6,7 @@ import * as Icon from 'react-bootstrap-icons';
 import MyNavbar from "./components/navBar.js"
 import MyFooter from "./components/footer.js"
 
+const indexUrl = "http://142.150.239.187:8090"
 
 class Headline extends React.Component {
   render() {
@@ -21,7 +22,71 @@ class Headline extends React.Component {
 }
 
 class Leadertable extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      leaderBoardList: [],
+    }
+  }
+
+  componentDidMount() {
+    fetch(indexUrl + "/api/getLeaderBoard", {
+      "method": "GET",
+      "headers": {
+        "accept": "application/json"
+      },
+    })
+    .then(response => response.json())
+    .then(response => {
+      console.log(response.data)
+      this.setState({
+        leaderBoardList: response.data,
+        updatedTime: response.update,
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    });
+  }
+
+
   render() {
+    var leaderBoardRender = []
+    
+    var idx = 1
+    this.state.leaderBoardList.forEach(element => {
+      var smartBadge
+      var badge = <span className="badge badge-success">PASS</span>
+      
+      if (element['smartest'] && element['smarter']) {
+        smartBadge = <span style={{color:"orange"}}><Icon.AwardFill /></span>
+      } else if (element['smartest']) {
+        smartBadge = <span style={{color:"orange"}}><Icon.Award /></span>
+      } else if (element['smarter']) {
+        smartBadge = <span style={{color:"#CCCC00"}}><Icon.Award /></span>
+      }
+
+      if (!element['all_valid'] || element['time_out']) {
+        badge = []
+      }
+      if (!element['all_valid']) {
+        badge.push(<span className="badge badge-danger">IM</span>)
+      }
+      if (element['time_out']) {
+        badge.push(<span className="badge badge-warning">TLE</span>)
+      }
+
+      leaderBoardRender.push(<Row>
+        <Col xs={1}>{idx}{smartBadge}</Col>
+        <Col xs={3}>{element['id']}</Col>
+        <Col xs={2}>{element['score']}</Col>
+        <Col xs={4} style={{margin: "auto"}}><ProgressBar now={element['indicator']} label={`${element['indicator']} %`}/></Col>
+        <Col xs={2}>{badge}</Col>
+      </Row>);
+      idx += 1;
+    });
+
+
     return (
       <div className="container" style={{marginTop: "30px", textAlign: "center", fontFamily: "Source Sans Pro", fontSize: "22px"}}>
         <h3 style={{fontWeight: "bold"}}> Reversi Project Top Leaderboard </h3>
@@ -33,15 +98,16 @@ class Leadertable extends React.Component {
           <Col xs={2}>Status</Col>
         </Row>
         <Row>
-          <Col xs={1}>1<span style={{color:"orange"}}><Icon.AwardFill /></span></Col>
+          <Col xs={1}>0<span style={{color:"orange"}}><Icon.AwardFill /></span></Col>
           <Col xs={3}>SiweiHe</Col>
           <Col xs={2}>∞</Col>
           <Col xs={4} style={{margin: "auto"}}><ProgressBar now={100} label={"∞ %"}/></Col>
           <Col xs={2}><span className="badge badge-success">PASS</span></Col>
         </Row>
+        {leaderBoardRender}
         
         <Row style={{textAlign: "center"}}>
-          <Col style={{marginTop: "20px", marginBottom: "20px", color: "orange"}}>Competition Not Yet Started.</Col>
+          <Col style={{marginTop: "20px", marginBottom: "20px", color: "darkgreen"}}>Let the competition Begin! Updated at: {this.state.updatedTime}</Col>
         </Row>
       </div>
     )
@@ -131,15 +197,21 @@ class Explanation extends React.Component {
       <div className="container" style={{marginTop: "20px", fontFamily: 'Source Sans Pro', fontSize: "20px"}}>
         {/* <p><a href="./logs/">Detailed logs</a></p> */}
         {/* <p><a href="./logs.tar.gz">Detailed logs archive</a> (use the command "tar zxf logs.tar.gz" to expand)</p> */}
+        <h5><strong>Smart Badge</strong></h5>
+        <p>
+          If you see a badge <span style={{color:"orange"}}><Icon.AwardFill /></span> in "Rank" column, that means your AI beats both aps105-smarter and aps105-smartest.
+          If you see a badge <span style={{color:"orange"}}><Icon.Award /></span> in "Rank" column, that means your AI beats aps105-smartest, but not aps105-smarter.
+          If you see a badge <span style={{color:"#CCCC00"}}><Icon.Award /></span> in "Rank" column, that means your AI beats aps105-smarter, but not aps105-smartest.
+        </p>
         <h5><strong>Remark Explanation:</strong></h5>
         <p>The remark listed above will <strong>NOT</strong> disqualify your AI if it was not a <span
             className="badge badge-success">PASS</span>. Your score listed here will be your final score if the output of the
           program is deterministic. However, you may want to debug your AI if you see a <span
-            className="badge badge-danger">WM</span>, or improve the efficiency of your AI if you see a <span
+            className="badge badge-danger">IM</span>, or improve the efficiency of your AI if you see a <span
             className="badge badge-warning">TLE</span>. Good luck and have fun designing your AI!</p>
         <p><span className="badge badge-success">PASS</span> Pass. Your AI's all moves were valid and all matches finished
           successfully.</p>
-        <p><span className="badge badge-danger">WM</span> Wrong Move. Your AI made at least one invalid move when competing
+        <p><span className="badge badge-danger">IM</span> Invalid Move. Your AI made at least one invalid move when competing
           against other
           classmates' AI.</p>
         <p><span className="badge badge-warning">TLE</span> Time Limit Exceed. Your AI timed out at least once when competing

@@ -26,8 +26,8 @@ export default class MyNavbar extends React.Component {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-        <Alert variant="warning">
-          This page might be under active development during 8 P.M.~1 A.M EST everyday. You may experience some delay or error during that time. [ Don't work too late! =) ]
+        <Alert variant="success">
+          Development is now complete. You can now access leaderboard and your personal page. Let the competition begin (ง •.•)ง ! 
         </Alert>
       </div>
     );
