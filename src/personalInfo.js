@@ -55,7 +55,7 @@ class PersonalInfo extends React.Component {
           smarterPassed: response.flags.smarter,
           smartestPassed: response.flags.smartest,
           allPassed: response.flags.allValid,
-          timeout: response.flags.timOut,
+          timeout: response.flags.timeOut,
         })
       }
     })
@@ -152,12 +152,12 @@ class PersonalInfo extends React.Component {
         <Icon.DashCircleFill /> &nbsp;Evaluation on timeout unavailable
       </div>
     } else if (this.state.timeout === 1) {
-      timeoutRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "green"}}>
-        <Icon.PatchCheckFill />  &nbsp;No timeout case
-      </div>
-    } else {
       timeoutRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "red"}}>
         <Icon.BugFill />  &nbsp;At least one timeout case
+      </div>
+    } else {
+      timeoutRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "green"}}>
+        <Icon.PatchCheckFill />  &nbsp;No timeout case
       </div>
     }
 
