@@ -1,8 +1,8 @@
 # Project Introduction
 
-This project is used for course APS105H1S(year 2021). Due to the COVID-19 pandemic, the teaching team wants to build an interactive platform to 
+This project is used for course APS105H1S(year 2021 and year 2022). Due to the COVID-19 pandemic, the teaching team wants to build an interactive platform to 
 give student a more interesting way to complete the biggest project in this course. The production page of this project is currently on: 
-[Production Page](http://142.150.239.187:8090/)
+[Production Page](http://aps105.ece.utoronto.ca:8090/)
 
 # Open Source
 
@@ -22,4 +22,4 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 # Credit
 
-2021, APS105 Teaching Team, University of Toronto
+2021 - 2022, APS105 Teaching Team, University of Toronto
