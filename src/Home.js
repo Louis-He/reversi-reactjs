@@ -7,12 +7,11 @@ import {Modal, Button, Alert, Col, Image, Row} from "react-bootstrap";
 import MyNavbar from "./components/navBar.js"
 import MyFooter from "./components/footer.js"
 
-// import BootstrapSwitchButton from 'bootstrap-switch-button-react'
-// import { Button } from '@material-ui/core';
 import * as Icon from 'react-bootstrap-icons';
 import logo from './fase.png'
 
 const indexUrl = "http://142.150.239.187:8090"
+
 
 function Square(props) {
     const chess = props.value === 1 ? '●': (props.value === 2 ? '○' : '');
@@ -633,8 +632,20 @@ class Home extends React.Component {
       <div style={{height: "100%"}}>
           <MyNavbar style={{marginBottom: "100px"}} />
           
-          <div className="Gameboard" style={{margin: "50px", marginBottom: "300px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <div className="Gameboard" style={{margin: "50px", marginBottom: "120px", display: "flex", justifyContent: "center", alignItems: "center"}}>
               <Game />
+          </div>
+
+          <div className="container" style={{marginTop: "20px", fontFamily: 'Source Sans Pro', fontSize: "20px"}}>
+          <h5><strong>Note</strong></h5>
+            <p>
+                TA_Excellent solution was developed by Zhihao Lin, a 2T2 student in ECE. The solution is considered to be one of the most advanced solutions over all of the students' submission
+            since we had a leaderboard.
+            </p>
+            <p>
+                APS105_smarter and APS105_smartest were developed by Professor Jason Anderson, Professor Baochun Li, and revised by Siwei He. These two solutions are relatively easy and are 
+            designed as reference solutions for this course.
+            </p>
           </div>
 
           <MyFooter />
