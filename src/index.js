@@ -4,13 +4,14 @@ import './App.css';
 import React from "react";
 import ReactDOM from "react-dom";
 import {
-    BrowserRouter as Router,
-    Switch,
+    BrowserRouter,
+    Routes,
     Route,
     Link,
     useParams,
-    useRouteMatch
+    useMatch
 } from "react-router-dom";
+import * as ReactDOMClient from 'react-dom/client';
 
 import Home from "./Home";
 import Leaderboard from "./Leaderboard";
@@ -54,25 +55,25 @@ function PersonalPage() {
 }
 
 function ThirdLevel() {
-  let { path, url } = useRouteMatch();
+  let { path, url } = useMatch();
   return (
-    <Switch>
+    <Routes>
       <Route path={`${path}/:studentPIN`}>
         <PersonalPage />
       </Route>
-    </Switch>
+    </Routes>
   )
 }
 
 
 function SecondLevel() {
-  let { path, url } = useRouteMatch();
+  let { path, url } = useMatch();
   return (
-    <Switch>
+    <Routes>
       <Route path={`${path}/:studentID`}>
         <ThirdLevel />
       </Route>
-    </Switch>
+    </Routes>
   )
 }
 
@@ -80,18 +81,29 @@ function SecondLevel() {
 //     <Home />,
 //     document.getElementById('root')
 // );
-ReactDOM.render(<Router>
-    <div>
-      <Route exact path="/">
-        <Home />
-      </Route>
-      <Route path="/leaderboard">
-        <Leaderboard />
-      </Route>
-      <Switch>
-        <Route path="/result">
-          <SecondLevel />
-        </Route>
-      </Switch>
-    </div>
-  </Router>, document.getElementById("root"));
+// ReactDOM.render(<Router>
+//     <div>
+//       <Route exact path="/">
+//         <Home />
+//       </Route>
+//       <Route path="/leaderboard">
+//         <Leaderboard />
+//       </Route>
+//       <Routes>
+//         <Route path="/result">
+//           <SecondLevel />
+//         </Route>
+//       </Routes>
+//     </div>
+//   </Router>, document.getElementById("root"));
+
+const root = ReactDOMClient.createRoot(document.getElementById("root"));
+root.render(
+  <BrowserRouter>
+    <Routes>
+      <Route exact path="/" element={<Home />} />
+      <Route path="/leaderboard" element={<Leaderboard />} />
+      <Route path="/result" element={<SecondLevel />} />
+    </Routes>
+  </BrowserRouter>
+);

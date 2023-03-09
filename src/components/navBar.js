@@ -13,7 +13,7 @@ export default class MyNavbar extends React.Component {
               src="/fase.png"
               height="60"
               className="d-inline-block align-top"
-              alt="React Bootstrap logo" fluid
+              alt="React Bootstrap logo" fluid="true"
             />
           </Navbar.Brand>
           <Navbar.Brand href="/">APS105 Reversi Interactive Platform</Navbar.Brand>

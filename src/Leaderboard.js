@@ -1,12 +1,12 @@
 import React from 'react';
 import './index.css';
-import {ProgressBar, Button, Col, Row, InputGroup, FormControl} from "react-bootstrap";
+import {ProgressBar, Button, Badge, Col, Row, InputGroup, FormControl} from "react-bootstrap";
 import * as Icon from 'react-bootstrap-icons';
 
 import MyNavbar from "./components/navBar.js"
 import MyFooter from "./components/footer.js"
 
-const indexUrl = "http://142.150.239.187:8090"
+const indexUrl = "http://localhost:8090"
 
 class Headline extends React.Component {
   render() {
@@ -56,7 +56,7 @@ class Leadertable extends React.Component {
     var idx = 1
     this.state.leaderBoardList.forEach(element => {
       var smartBadge
-      var badge = <span className="badge badge-success">PASS</span>
+      var badge = <Badge bg="success">PASS</Badge>
       
       if (element['smartest'] && element['smarter']) {
         smartBadge = <span style={{color:"orange"}}><Icon.AwardFill /></span>
@@ -102,12 +102,13 @@ class Leadertable extends React.Component {
           <Col xs={3}>SiweiHe</Col>
           <Col xs={2}>∞</Col>
           <Col xs={4} style={{margin: "auto"}}><ProgressBar now={100} label={"∞ %"}/></Col>
-          <Col xs={2}><span className="badge badge-success">PASS</span></Col>
+          <Col xs={2}><Badge bg="success">PASS</Badge></Col>
         </Row>
         {leaderBoardRender}
         
         <Row style={{textAlign: "center"}}>
-          <Col style={{marginTop: "20px", marginBottom: "20px", color: "darkgreen"}}>Let the competition Begin! Updated at: {this.state.updatedTime}</Col>
+          {/* <Col style={{marginTop: "20px", marginBottom: "20px", color: "darkgreen"}}>Let the competition Begin! Updated at: {this.state.updatedTime}</Col> */}
+          <Col style={{marginTop: "20px", marginBottom: "20px", color: "darkgreen"}}>Competition hasn't started.</Col>
         </Row>
       </div>
     )
@@ -123,7 +124,7 @@ class Linktoindividual extends React.Component {
       studentPIN:    '',
       alert: '',
 
-      is_check_disabled: false,
+      is_check_disabled: true,
     }
   }
 
@@ -152,9 +153,7 @@ class Linktoindividual extends React.Component {
         <Row>
           <Col>
             <InputGroup className="mb-3">
-              <InputGroup.Prepend>
-                <InputGroup.Text id="basic-addon1">Username</InputGroup.Text>
-              </InputGroup.Prepend>
+              <InputGroup.Text id="basic-addon1">Username</InputGroup.Text>
               <FormControl
                 placeholder="Your Utorid"
                 aria-label="Username"
@@ -165,9 +164,7 @@ class Linktoindividual extends React.Component {
           </Col>
           <Col>
             <InputGroup className="mb-3">
-              <InputGroup.Prepend>
-                <InputGroup.Text id="basic-addon2">PIN</InputGroup.Text>
-              </InputGroup.Prepend>
+              <InputGroup.Text id="basic-addon2">PIN</InputGroup.Text>
               <FormControl
                 placeholder="PIN on Quercus"
                 aria-label="PIN"
@@ -182,8 +179,7 @@ class Linktoindividual extends React.Component {
             variant="primary"
             disabled={this.state.is_check_disabled}
             onClick={e => this.rankCheck()}
-          >Check My Rank =)</Button>
-          
+          >Check My Rank</Button>
         </Row>
         <h4 style={{marginBottom: "20px",color:"orange"}}>{this.state.alert}</h4>
       </div>
@@ -204,17 +200,16 @@ class Explanation extends React.Component {
           If you see a badge <span style={{color:"#CCCC00"}}><Icon.Award /></span> in "Rank" column, that means your AI beats aps105-smarter, but not aps105-smartest.
         </p>
         <h5><strong>Remark Explanation:</strong></h5>
-        <p>The remark listed above will <strong>NOT</strong> disqualify your AI if it was not a <span
-            className="badge badge-success">PASS</span>. Your score listed here will be your final score if the output of the
-          program is deterministic. However, you may want to debug your AI if you see a <span
-            className="badge badge-danger">IM</span>, or improve the efficiency of your AI if you see a <span
-            className="badge badge-warning">TLE</span>. Good luck and have fun designing your AI!</p>
-        <p><span className="badge badge-success">PASS</span> Pass. Your AI's all moves were valid and all matches finished
+        <p>The remark listed above will <strong>NOT</strong> disqualify your AI if it was not a <span><Badge bg="success">PASS</Badge></span>. 
+          Your score listed here will be your final score if the output of the
+          program is deterministic. However, you may want to debug your AI if you see a <span><Badge bg="danger">IM</Badge></span>, 
+          or improve the efficiency of your AI if you see a <span><Badge bg="warning">TLE</Badge></span>. Good luck and have fun designing your AI!</p>
+        <p><span><Badge bg="success">PASS</Badge></span> Pass. Your AI's all moves were valid and all matches finished
           successfully.</p>
-        <p><span className="badge badge-danger">IM</span> Invalid Move. Your AI made at least one invalid move when competing
+        <p><span><Badge bg="danger">IM</Badge></span> Invalid Move. Your AI made at least one invalid move when competing
           against other
           classmates' AI.</p>
-        <p><span className="badge badge-warning">TLE</span> Time Limit Exceed. Your AI timed out at least once when competing
+        <p><span><Badge bg="warning">TLE</Badge></span> Time Limit Exceed. Your AI timed out at least once when competing
           against other
           classmates' AI.</p>
         <h5><strong>Disqualified players:</strong></h5>

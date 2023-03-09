@@ -10,7 +10,7 @@ import MyFooter from "./components/footer.js"
 import * as Icon from 'react-bootstrap-icons';
 import logo from './fase.png'
 
-const indexUrl = "http://142.150.239.187:8090"
+const indexUrl = "http://localhost:8090"
 
 
 function Square(props) {
@@ -64,23 +64,23 @@ class Board extends React.Component {
 
 class Game extends React.Component {
     componentDidMount() {
-        fetch(indexUrl + "/api/getOpponentList", {
-            "method": "GET",
-            "headers": {
-                "accept": "application/json"
-            },
-        })
-        .then(response => response.json())
-        .then(response => {
-            console.log("S")
-            this.setState({
-                dropdown_arr: response.data,
-                solutionDivider: response.sol_divider
-            })
-        })
-        .catch(err => {
-            console.log(err)
-        });
+        // fetch(indexUrl + "/api/getOpponentList", {
+        //     "method": "GET",
+        //     "headers": {
+        //         "accept": "application/json"
+        //     },
+        // })
+        // .then(response => response.json())
+        // .then(response => {
+        //     console.log("S")
+        //     this.setState({
+        //         dropdown_arr: response.data,
+        //         solutionDivider: response.sol_divider
+        //     })
+        // })
+        // .catch(err => {
+        //     console.log(err)
+        // });
     }
 
     constructor(props) {
@@ -636,7 +636,7 @@ class Home extends React.Component {
               <Game />
           </div>
 
-          <div className="container" style={{marginTop: "20px", fontFamily: 'Source Sans Pro', fontSize: "20px"}}>
+          {/* <div className="container" style={{marginTop: "20px", fontFamily: 'Source Sans Pro', fontSize: "20px"}}>
           <h5><strong>Note</strong></h5>
             <p>
                 TA_Excellent solution was developed by Zhihao Lin, a 2T2 student in ECE. The solution is considered to be one of the most advanced solutions over all of the students' submission
@@ -646,7 +646,7 @@ class Home extends React.Component {
                 APS105_smarter and APS105_smartest were developed by Professor Jason Anderson, Professor Baochun Li, and revised by Siwei He. These two solutions are relatively easy and are 
             designed as reference solutions for this course.
             </p>
-          </div>
+          </div> */}
 
           <MyFooter />
       </div>
