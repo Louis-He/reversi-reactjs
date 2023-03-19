@@ -11,7 +11,7 @@ import * as Icon from 'react-bootstrap-icons';
 import logo from './fase.png'
 
 const indexUrl = "http://localhost:8090"
-
+// const indexUrl = "http://aps105.ece.utoronto.ca:8090"
 
 function Square(props) {
     const chess = props.value === 1 ? '●': (props.value === 2 ? '○' : '');
@@ -64,33 +64,33 @@ class Board extends React.Component {
 
 class Game extends React.Component {
     componentDidMount() {
-        // fetch(indexUrl + "/api/getOpponentList", {
-        //     "method": "GET",
-        //     "headers": {
-        //         "accept": "application/json"
-        //     },
-        // })
-        // .then(response => response.json())
-        // .then(response => {
-        //     console.log("S")
-        //     this.setState({
-        //         dropdown_arr: response.data,
-        //         solutionDivider: response.sol_divider
-        //     })
-        // })
-        // .catch(err => {
-        //     console.log(err)
-        // });
+        fetch(indexUrl + "/api/getOpponentList", {
+            "method": "GET",
+            "headers": {
+                "accept": "application/json"
+            },
+        })
+        .then(response => response.json())
+        .then(response => {
+            console.log("S")
+            this.setState({
+                dropdown_arr: response.data,
+                solutionDivider: response.sol_divider
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        });
     }
 
     constructor(props) {
         super(props);
         let original_board = Array(64).fill(0);
         // initialize the board
-        original_board[3 * 8 + 3] = 1;
-        original_board[3 * 8 + 4] = 2;
-        original_board[4 * 8 + 3] = 2;
-        original_board[4 * 8 + 4] = 1;
+        original_board[3 * 8 + 3] = 2;
+        original_board[3 * 8 + 4] = 1;
+        original_board[4 * 8 + 3] = 1;
+        original_board[4 * 8 + 4] = 2;
 
         let hint_board = original_board.slice();
 
@@ -328,10 +328,10 @@ class Game extends React.Component {
         var that = this;
         let original_board = Array(64).fill(0);
         // initialize the board
-        original_board[3 * 8 + 3] = 1;
-        original_board[3 * 8 + 4] = 2;
-        original_board[4 * 8 + 3] = 2;
-        original_board[4 * 8 + 4] = 1;
+        original_board[3 * 8 + 3] = 2;
+        original_board[3 * 8 + 4] = 1;
+        original_board[4 * 8 + 3] = 1;
+        original_board[4 * 8 + 4] = 2;
 
         this.setState ({
             is_player_vs_computer: true,
@@ -636,17 +636,17 @@ class Home extends React.Component {
               <Game />
           </div>
 
-          {/* <div className="container" style={{marginTop: "20px", fontFamily: 'Source Sans Pro', fontSize: "20px"}}>
+          <div className="container" style={{marginTop: "20px", fontFamily: 'Source Sans Pro', fontSize: "20px"}}>
           <h5><strong>Note</strong></h5>
             <p>
-                TA_Excellent solution was developed by Zhihao Lin, a 2T2 student in ECE. The solution is considered to be one of the most advanced solutions over all of the students' submission
+                TA_Excellent solution was developed by Zhihao Lin, a 2T2 student in ECE. The solution is considered to be one of the most advanced solutions over all of the students' submissions
             since we had a leaderboard.
             </p>
             <p>
-                APS105_smarter and APS105_smartest were developed by Professor Jason Anderson, Professor Baochun Li, and revised by Siwei He. These two solutions are relatively easy and are 
+                APS105_smarter and APS105_smartest were developed by Professor Jason Anderson, Professor Baochun Li, and revised by Siwei (Louis) He. These two solutions are relatively easy and are 
             designed as reference solutions for this course.
             </p>
-          </div> */}
+          </div>
 
           <MyFooter />
       </div>

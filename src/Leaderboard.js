@@ -7,6 +7,7 @@ import MyNavbar from "./components/navBar.js"
 import MyFooter from "./components/footer.js"
 
 const indexUrl = "http://localhost:8090"
+// const indexUrl = "http://aps105.ece.utoronto.ca:8090"
 
 class Headline extends React.Component {
   render() {
