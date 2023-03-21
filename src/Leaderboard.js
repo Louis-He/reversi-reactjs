@@ -6,8 +6,8 @@ import * as Icon from 'react-bootstrap-icons';
 import MyNavbar from "./components/navBar.js"
 import MyFooter from "./components/footer.js"
 
-const indexUrl = "http://localhost:8090"
-// const indexUrl = "http://aps105.ece.utoronto.ca:8090"
+// const indexUrl = "http://localhost:8090"
+const indexUrl = "http://aps105.ece.utoronto.ca:8090"
 
 class Headline extends React.Component {
   render() {
@@ -39,7 +39,7 @@ class Leadertable extends React.Component {
     })
     .then(response => response.json())
     .then(response => {
-      console.log(response.data)
+      console.log(response)
       this.setState({
         leaderBoardList: response.data,
         updatedTime: response.update,
@@ -55,33 +55,39 @@ class Leadertable extends React.Component {
     var leaderBoardRender = []
     
     var idx = 1
+    var max_elo = 0
     this.state.leaderBoardList.forEach(element => {
-      var smartBadge
-      var badge = <Badge bg="success">PASS</Badge>
+      const student_UTORID = Object.keys(element)[0];
+      const student_result = element[student_UTORID]
+
+      max_elo = Math.max(student_result['elo'], max_elo)
+      var progressbar_percentage = (student_result['elo'] / max_elo * 100).toFixed(2)
+      // var smartBadge
+      var badge = []
       
-      if (element['smartest'] && element['smarter']) {
-        smartBadge = <span style={{color:"orange"}}><Icon.AwardFill /></span>
-      } else if (element['smartest']) {
-        smartBadge = <span style={{color:"orange"}}><Icon.Award /></span>
-      } else if (element['smarter']) {
-        smartBadge = <span style={{color:"#CCCC00"}}><Icon.Award /></span>
-      }
+      // if (element['smartest'] && element['smarter']) {
+      //   smartBadge = <span style={{color:"orange"}}><Icon.AwardFill /></span>
+      // } else if (element['smartest']) {
+      //   smartBadge = <span style={{color:"orange"}}><Icon.Award /></span>
+      // } else if (element['smarter']) {
+      //   smartBadge = <span style={{color:"#CCCC00"}}><Icon.Award /></span>
+      // }
+      if (!student_result['IM'] && !student_result['TLE']) {
+        badge.push(<Badge bg="success">PASS</Badge>)
+      } else {
+        if (student_result['IM']) {
+          badge.push(<Badge bg="danger">IM</Badge>)
+        }
+        if (student_result['TLE']) {
+          badge.push(<Badge bg="warning">TLE</Badge>)
+        }
+      } 
 
-      if (!element['all_valid'] || element['time_out']) {
-        badge = []
-      }
-      if (!element['all_valid']) {
-        badge.push(<span className="badge badge-danger">IM</span>)
-      }
-      if (element['time_out']) {
-        badge.push(<span className="badge badge-warning">TLE</span>)
-      }
-
-      leaderBoardRender.push(<Row>
-        <Col xs={1}>{idx}{smartBadge}</Col>
-        <Col xs={3}>{element['id']}</Col>
-        <Col xs={2}>{element['score']}</Col>
-        <Col xs={4} style={{margin: "auto"}}><ProgressBar now={element['indicator']} label={`${element['indicator']} %`}/></Col>
+      leaderBoardRender.push(<Row key={idx}>
+        <Col xs={1}>{idx}{}</Col>
+        <Col xs={3}>{student_UTORID}</Col>
+        <Col xs={2}>{student_result['elo'].toFixed(2)}</Col>
+        <Col xs={4} style={{margin: "auto"}}><ProgressBar now={progressbar_percentage} label={`${progressbar_percentage} %`}/></Col>
         <Col xs={2}>{badge}</Col>
       </Row>);
       idx += 1;
@@ -108,8 +114,8 @@ class Leadertable extends React.Component {
         {leaderBoardRender}
         
         <Row style={{textAlign: "center"}}>
-          {/* <Col style={{marginTop: "20px", marginBottom: "20px", color: "darkgreen"}}>Let the competition Begin! Updated at: {this.state.updatedTime}</Col> */}
-          <Col style={{marginTop: "20px", marginBottom: "20px", color: "darkgreen"}}>Competition hasn't started.</Col>
+          <Col style={{marginTop: "20px", marginBottom: "20px", color: "darkgreen"}}>Let the competition Begin! Updated at: {this.state.updatedTime}</Col>
+          {/* <Col style={{marginTop: "20px", marginBottom: "20px", color: "darkgreen"}}>Competition hasn't started.</Col> */}
         </Row>
       </div>
     )
@@ -125,7 +131,7 @@ class Linktoindividual extends React.Component {
       studentPIN:    '',
       alert: '',
 
-      is_check_disabled: true,
+      is_check_disabled: false,
     }
   }
 
@@ -194,12 +200,12 @@ class Explanation extends React.Component {
       <div className="container" style={{marginTop: "20px", fontFamily: 'Source Sans Pro', fontSize: "20px"}}>
         {/* <p><a href="./logs/">Detailed logs</a></p> */}
         {/* <p><a href="./logs.tar.gz">Detailed logs archive</a> (use the command "tar zxf logs.tar.gz" to expand)</p> */}
-        <h5><strong>Smart Badge</strong></h5>
+        {/* <h5><strong>Smart Badge</strong></h5>
         <p>
           If you see a badge <span style={{color:"orange"}}><Icon.AwardFill /></span> in "Rank" column, that means your AI beats both aps105-smarter and aps105-smartest.
           If you see a badge <span style={{color:"orange"}}><Icon.Award /></span> in "Rank" column, that means your AI beats aps105-smartest, but not aps105-smarter.
           If you see a badge <span style={{color:"#CCCC00"}}><Icon.Award /></span> in "Rank" column, that means your AI beats aps105-smarter, but not aps105-smartest.
-        </p>
+        </p> */}
         <h5><strong>Remark Explanation:</strong></h5>
         <p>The remark listed above will <strong>NOT</strong> disqualify your AI if it was not a <span><Badge bg="success">PASS</Badge></span>. 
           Your score listed here will be your final score if the output of the

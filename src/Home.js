@@ -10,8 +10,8 @@ import MyFooter from "./components/footer.js"
 import * as Icon from 'react-bootstrap-icons';
 import logo from './fase.png'
 
-const indexUrl = "http://localhost:8090"
-// const indexUrl = "http://aps105.ece.utoronto.ca:8090"
+// const indexUrl = "http://localhost:8090"
+const indexUrl = "http://aps105.ece.utoronto.ca:8090"
 
 function Square(props) {
     const chess = props.value === 1 ? '●': (props.value === 2 ? '○' : '');

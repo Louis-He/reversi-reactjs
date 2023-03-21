@@ -8,7 +8,9 @@ import * as Icon from 'react-bootstrap-icons';
 import Chart from "react-google-charts";
 import {Modal, Button, Col, Image, Row} from "react-bootstrap";
 
-const indexUrl = "http://142.150.239.187:8090"
+const indexUrl = "http://aps105.ece.utoronto.ca:8090"
+// const indexUrl = "http://localhost:8090"
+
 
 class PersonalInfo extends React.Component {
   componentDidMount() {
@@ -52,10 +54,8 @@ class PersonalInfo extends React.Component {
           historyRankChartList: historyRankChartList,
           historyScoreChartList: historyScoreChartList,
           rank: response.rankList[response.dateList.length - 1],
-          smarterPassed: response.flags.smarter,
-          smartestPassed: response.flags.smartest,
-          allPassed: response.flags.allValid,
-          timeout: response.flags.timeOut,
+          IM: response.flags.IM,
+          TLE: response.flags.TLE,
         })
       }
     })
@@ -72,18 +72,14 @@ class PersonalInfo extends React.Component {
       studentPIN:     props.studentPIN,
       smarterPassed:  false,
       smartestPassed: false,
-      allPassed:      2,
-      timeout:        2,
+      IM:             2,
+      TLE:            2,
       rankingUp:      false,
       rankingDown:    false,
       rank:           "--",
     }
   }
   render() {
-    // const data = [
-    //   ["Time", "Rank"],
-    //   ["1", 528],
-    // ];
     const rankOptions = {
       title: "History Ranking",
       legend: { position: "bottom" },
@@ -113,45 +109,26 @@ class PersonalInfo extends React.Component {
     let allPassedRender;
     let timeoutRender;
     let rankingIndicateRender;
-    if (this.state.smarterPassed) {
-      smarterPassedRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "green"}}>
-        <Icon.PatchCheckFill />  &nbsp;Passed APS105-smarter
-      </div>
-    } else {
-      smarterPassedRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "red"}}>
-        <Icon.PatchExclamationFill />  &nbsp;Failed APS105-smarter
-      </div>
-    }
 
-    if (this.state.smartestPassed) {
-      smartestPassedRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "green"}}>
-        <Icon.PatchCheckFill />  &nbsp;Passed APS105-smartest
-      </div>
-    } else {
-      smartestPassedRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "red"}}>
-        <Icon.PatchExclamationFill />  &nbsp;Failed APS105-smartest
-      </div>
-    }
-
-    if (this.state.allPassed == 2) {
+    if (this.state.IM == 2) {
       allPassedRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "gray"}}>
         <Icon.DashCircleFill /> &nbsp;Evaluation on competition not available
       </div>
-    } else if (this.state.allPassed == 1) {
-      allPassedRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "green"}}>
-        <Icon.PatchCheckFill /> &nbsp;Passed all competition
-      </div>
-    } else {
+    } else if (this.state.IM == 1) {
       allPassedRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "red"}}>
         <Icon.PatchExclamationFill /> &nbsp;Failed some competitions (Invalid Move)
       </div>
+    } else {
+      allPassedRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "green"}}>
+        <Icon.PatchCheckFill /> &nbsp;Passed all competition
+      </div>
     }
 
-    if (this.state.timeout === 2) {
+    if (this.state.TLE === 2) {
       timeoutRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "gray"}}>
         <Icon.DashCircleFill /> &nbsp;Evaluation on timeout unavailable
       </div>
-    } else if (this.state.timeout === 1) {
+    } else if (this.state.TLE === 1) {
       timeoutRender = <div style={{display: "flex", alignItems: "center", fontSize: "22px", color: "red"}}>
         <Icon.BugFill />  &nbsp;At least one timeout case
       </div>

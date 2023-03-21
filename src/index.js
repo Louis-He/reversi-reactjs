@@ -57,11 +57,11 @@ function PersonalPage() {
 function ThirdLevel() {
   let { path, url } = useMatch();
   return (
-    <Routes>
+    <BrowserRouter>
       <Route path={`${path}/:studentPIN`}>
         <PersonalPage />
       </Route>
-    </Routes>
+    </BrowserRouter>
   )
 }
 
@@ -69,11 +69,11 @@ function ThirdLevel() {
 function SecondLevel() {
   let { path, url } = useMatch();
   return (
-    <Routes>
+    <BrowserRouter>
       <Route path={`${path}/:studentID`}>
         <ThirdLevel />
       </Route>
-    </Routes>
+    </BrowserRouter>
   )
 }
 
@@ -103,7 +103,7 @@ root.render(
     <Routes>
       <Route exact path="/" element={<Home />} />
       <Route path="/leaderboard" element={<Leaderboard />} />
-      <Route path="/result" element={<SecondLevel />} />
+      <Route path={`/result/:studentID/:studentPIN`} element={<PersonalPage />} />
     </Routes>
   </BrowserRouter>
 );
