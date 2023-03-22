@@ -43,6 +43,7 @@ class Leadertable extends React.Component {
       this.setState({
         leaderBoardList: response.data,
         updatedTime: response.update,
+        elapsedTime: response.elapsed,
       })
     })
     .catch(err => {
@@ -114,8 +115,11 @@ class Leadertable extends React.Component {
         {leaderBoardRender}
         
         <Row style={{textAlign: "center"}}>
-          <Col style={{marginTop: "20px", marginBottom: "20px", color: "darkgreen"}}>Let the competition Begin! Updated at: {this.state.updatedTime}</Col>
+          <Col style={{marginTop: "20px", color: "darkgreen"}}>Let the competition Begin! Updated at: {this.state.updatedTime}</Col>
           {/* <Col style={{marginTop: "20px", marginBottom: "20px", color: "darkgreen"}}>Competition hasn't started.</Col> */}
+        </Row>
+        <Row style={{textAlign: "center"}}>
+          <Col style={{marginBottom: "20px", color: "darkgreen"}}>This round of leaderboard took: {this.state.elapsedTime} seconds to compute</Col>
         </Row>
       </div>
     )
@@ -222,22 +226,17 @@ class Explanation extends React.Component {
         <h5><strong>Disqualified players:</strong></h5>
         <p>[None]</p>
         <h5><strong>Leaderboard rules:</strong></h5>
-        {/* <p>AIs that win at least three games (out of four) against aps105-smarter and aps105-smartest are chosen to
-          advance
-          to the finals.</p> */}
-        <p>Two games are played between each pair of finalists, and the results are scored and ranked.</p>
-        {/* <h5><strong>Rules for computing the scores used for ranking</strong>:</h5>
-        <p>A game won earns a score equal to the ratio of the winner's over the loser's pieces on the board, with a
-          maximum
-          score of 2. If a game is won due to a timed out or invalid move made by the opponent, the winner earns a score
-          of
-          2.</p>
-        <p>A game lost earns a score of 0.</p>
-        <p>A tie earns a score between 0 and 1, depending on the amount of time each player used (shorter times earn
-          higher
-          scores), as a fraction of the total time for both players.</p>
-        <p>Last updated: 
-        </p> */}
+        <p>AIs that win at least one game (out of four) against aps105-smarter and aps105-smartest are chosen to
+          advance to the finals.</p>
+        <p>The leaderboard is using the Elo rating system. This system is used to calculate the relative skill levels of players 
+          in two-player games such as chess. The system was invented by Arpad Elo, a Hungarian-born American physics professor.</p>
+        <h5><strong>Rules for computing the scores used for ranking</strong>:</h5>
+        <p>Each player will have an initial rating of 1000. First, each player playes against aps105_smarter and aps105-smartest for 
+          initial Elo rating adjustment and non-finalists elimination.
+        </p>
+        <p>After finalists are chosen, each player will select another random certain number of players (currently 5 and pending adjustment for 
+          better rating accuracy and stability). The Elo rating is then updated based on the result of each match.
+        </p>
       </div>
     )
   }

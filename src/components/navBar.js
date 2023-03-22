@@ -26,9 +26,9 @@ export default class MyNavbar extends React.Component {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-        <Alert variant="warning">
-          {/* Development is now complete. You can now access leaderboard and your personal page. Let the competition begin (ง •.•)ง !  */}
-          The system in now under active hot update. You may experience some delay/time-out when accessing this system.
+        <Alert variant="success">
+          Development is now complete. You can now access leaderboard and your personal page. Let the competition begin (ง •.•)ง ! 
+          {/* The system in now under active hot update. You may experience some delay/time-out when accessing this system. */}
         </Alert>
       </div>
     );
